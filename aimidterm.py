@@ -28,9 +28,27 @@ class Person:
         self.y = y
         self.figure = figure
         self.nextSecondChangeFigure = None
-        self.purple = (102, 0, 102)  # fat woman
-        self.blue = (0, 0, 128)  # man
-        self.red = (200, 0, 0)  # woman
+        self.white = (255, 255, 255)  # grid background
+        self.black = (0, 0, 0)  # personal trainer
+        self.pink = (255, 105, 180) # fat woman
+        self.purple = (102, 0, 102)  # fat man
+        self.blue = (0, 0, 255)  # man
+        self.red = (255, 0, 0)  # woman
+        self.green = (0, 255, 0) # personal trainer
+        if figure == 0:
+            self.color = self.white
+        elif figure == 1:
+            self.color = self.blue 
+        elif figure == 2:
+            self.color = self.red
+        elif figure == 3:
+            self.color = self.green
+        elif figure == 4:
+            self.color = self.pink
+        elif figure == 5:
+            self.color = self.purple
+            
+        
     def move(self):
         pass
 
@@ -64,6 +82,11 @@ class Gym:
         self.objIndiceList = [0, 1, 2, 3, 4, 5] # val (0, 1, 2, 3, 4, 5) means (gymSpace, man, woman, coach, fat_girl, fat_boy)
         self.objLocList = np.random.choice(self.objIndiceList, objQuantity, p=[self.gymSpaceRatio, self.manRatio, self.womanRatio, self.trainerRatio, self.fatWomanRatio, self.fatManRatio])
         self.objLocList = self.objLocList.reshape((int(self.windowHeight / self.blockSize), int(self.windowWidth / self.blockSize)))
+                
+        for i in range(int(self.windowHeight / self.blockSize)):
+            for j in range(int(self.windowWidth / self.blockSize)):
+                self.objLocList[i, j] = Person(i, j, self.objLocList[i, j])
+                
 
 
 
