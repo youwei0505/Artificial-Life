@@ -4,23 +4,24 @@ import matplotlib.animation as animation
 from numpy.random import seed
 from numpy.random import randint
 import pygame
-#不限程式語言實作人工生命(Artificial life)，主題與方法不限。
-#以下以健身房的生活方式：
-#空間大小: 100*100 平方
-#初始人比例於空間中: 正常男生0.2，正常女生0.2，泡芙男/女孩0.05, 教練0.05，空位0.5
+# 不限程式語言實作人工生命(Artificial life)，主題與方法不限。
+# 以下以健身房的生活方式：
+# 空間大小: 100*100 平方
+# 初始人比例於空間中: 正常男生0.2，正常女生0.2，泡芙男/女孩0.05, 教練0.05，空位0.5 加起來為1
 #設定空間中角色位置: 隨機
-#設定人每次的移動步數: 1步上下隨機
+# 設定人每次的移動步數: 1步上下隨機
 #規則1: 教練會將泡芙變成正常
-#規則2: 男生可感測到周遭的味道，並往該方向搜尋女生走過的地方釋放費洛蒙，吸引男生靠近，教練不影響
-#規則3: 一男一女回家，便能夠增加人數量，隨機產生男女
-#規則4: 男/女須在限制的步數或時間內找到男/女，否則死亡
+# 規則2: 男生可感測到周遭的味道，並往該方向搜尋女生走過的地方釋放費洛蒙，吸引男生靠近，教練不影響
+# 規則3: 一男一女回家，便能夠增加人數量，隨機產生男女
+# 規則4: 男/女須在限制的步數或時間內找到男/女，否則死亡
 
-#設定Time interval
-#time.sleep(1)
+# 設定Time interval
+# time.sleep(1)
 
-#Initial
+# Initial
 
 # this function is for changing the exist dots
+
 
 class Person:
     def __init__(self, x, y, figure):
@@ -30,15 +31,15 @@ class Person:
         self.nextSecondChangeFigure = None
         self.white = (255, 255, 255)  # grid background
         self.black = (0, 0, 0)  # personal trainer
-        self.pink = (255, 105, 180) # fat woman
+        self.pink = (255, 105, 180)  # fat woman
         self.purple = (102, 0, 102)  # fat man
         self.blue = (0, 0, 255)  # man
         self.red = (255, 0, 0)  # woman
-        self.green = (0, 255, 0) # personal trainer
+        self.green = (0, 255, 0)  # personal trainer
         if figure == 0:
             self.color = self.white
         elif figure == 1:
-            self.color = self.blue 
+            self.color = self.blue
         elif figure == 2:
             self.color = self.red
         elif figure == 3:
@@ -47,8 +48,7 @@ class Person:
             self.color = self.pink
         elif figure == 5:
             self.color = self.purple
-            
-        
+
     def move(self):
         pass
 
@@ -58,7 +58,8 @@ class Gym:
         self.windowHeight = windowHeight
         self.windowWidth = windowWidth
         self.blockSize = blockSize
-        self.layout = np.zeros((windowHeight, windowWidth), int) # val (1, 2, 3, 4, 5) means (man, woman, coach, fat_girl, fat_boy)
+        # val (1, 2, 3, 4, 5) means (man, woman, coach, fat_girl, fat_boy)
+        self.layout = np.zeros((windowHeight, windowWidth), int)
 
         '''color set'''
         self.white = (255, 255, 255)  # grid background
@@ -74,31 +75,34 @@ class Gym:
         self.screen.fill(self.white)
         self.drawGrid()
         self.generateInitRandom()
+
     def update(self):
         pass
+
     def generateInitRandom(self):
         objQuantity = int(pow(self.windowHeight / self.blockSize, 2))
 
-        self.objIndiceList = [0, 1, 2, 3, 4, 5] # val (0, 1, 2, 3, 4, 5) means (gymSpace, man, woman, coach, fat_girl, fat_boy)
-        self.objLocList = np.random.choice(self.objIndiceList, objQuantity, p=[self.gymSpaceRatio, self.manRatio, self.womanRatio, self.trainerRatio, self.fatWomanRatio, self.fatManRatio])
-        self.objLocList = self.objLocList.reshape((int(self.windowHeight / self.blockSize), int(self.windowWidth / self.blockSize)))
-                
+        # val (0, 1, 2, 3, 4, 5) means (gymSpace, man, woman, coach, fat_girl, fat_boy)
+        self.objIndiceList = [0, 1, 2, 3, 4, 5]
+        self.objLocList = np.random.choice(self.objIndiceList, objQuantity, p=[
+                                           self.gymSpaceRatio, self.manRatio, self.womanRatio, self.trainerRatio, self.fatWomanRatio, self.fatManRatio])
+        self.objLocList = self.objLocList.reshape(
+            (int(self.windowHeight / self.blockSize), int(self.windowWidth / self.blockSize)))
+
         for i in range(int(self.windowHeight / self.blockSize)):
             for j in range(int(self.windowWidth / self.blockSize)):
                 self.objLocList[i, j] = Person(i, j, self.objLocList[i, j])
-                
-
-
 
     def nextMoveCheck(self):
         pass
+
     def drawGrid(self):
         self.blockSize = 20  # Set the size of the grid block
         for i in range(self.windowHeight):
             for j in range(self.windowWidth):
-                rect = pygame.Rect(j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize)  # left, top, width, height
+                rect = pygame.Rect(j * self.blockSize, i * self.blockSize,
+                                   self.blockSize, self.blockSize)  # left, top, width, height
                 pygame.draw.rect(self.screen, self.black, rect, 1)
-
 
 
 def operationOfCurrentPoint(sumOfSurviver, i, j):
@@ -169,7 +173,6 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-
         pygame.display.update()
 
     '''
@@ -186,6 +189,7 @@ def main():
     ani = animation.FuncAnimation(figure, update, interval=50, save_count=50)
     plt.show()
     '''
+
 
 if __name__ == "__main__":
     main()
